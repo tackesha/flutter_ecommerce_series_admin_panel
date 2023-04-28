@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-class Order extends Equatable {
+class OrderModel extends Equatable {
   final int id;
   final int customerId;
-  final List<int> productIds;
+  final List<String> productIds;
   final double deliveryFee;
   final double subtotal;
   final double total;
@@ -15,7 +15,7 @@ class Order extends Equatable {
   final bool isCancelled;
   final DateTime createdAt;
 
-  const Order({
+  const OrderModel({
     required this.id,
     required this.customerId,
     required this.productIds,
@@ -28,10 +28,10 @@ class Order extends Equatable {
     required this.createdAt,
   });
 
-  Order copyWith({
+  OrderModel copyWith({
     int? id,
     int? customerId,
-    List<int>? productIds,
+    List<String>? productIds,
     double? deliveryFee,
     double? subtotal,
     double? total,
@@ -40,7 +40,7 @@ class Order extends Equatable {
     bool? isCancelled,
     DateTime? createdAt,
   }) {
-    return Order(
+    return OrderModel(
       id: id ?? this.id,
       customerId: customerId ?? this.customerId,
       productIds: productIds ?? this.productIds,
@@ -69,11 +69,11 @@ class Order extends Equatable {
     };
   }
 
-  factory Order.fromSnapshot(DocumentSnapshot snap) {
-    return Order(
+  factory OrderModel.fromSnapshot(DocumentSnapshot snap) {
+    return OrderModel(
       id: snap['id'],
       customerId: snap['customerId'],
-      productIds: List<int>.from(snap['productIds']),
+      productIds: List<String>.from(snap['productIds']),
       deliveryFee: snap['deliveryFee'],
       subtotal: snap['subtotal'],
       total: snap['total'],
@@ -105,30 +105,30 @@ class Order extends Equatable {
     ];
   }
 
-  static List<Order> orders = [
-    Order(
-      id: 1,
-      customerId: 2345,
-      productIds: const [1, 2],
-      deliveryFee: 10,
-      subtotal: 20,
-      total: 30,
-      isAccepted: false,
-      isDelivered: false,
-      isCancelled: false,
-      createdAt: DateTime.now(),
-    ),
-    Order(
-      id: 2,
-      customerId: 23,
-      productIds: const [1, 2, 3],
-      deliveryFee: 10,
-      subtotal: 30,
-      total: 30,
-      isAccepted: false,
-      isDelivered: false,
-      isCancelled: false,
-      createdAt: DateTime.now(),
-    ),
-  ];
+  // static List<OrderModel> OrderModels = [
+  //   OrderModel(
+  //     id: 1,
+  //     customerId: 2345,
+  //     productIds: const [1, 2],
+  //     deliveryFee: 10,
+  //     subtotal: 20,
+  //     total: 30,
+  //     isAccepted: false,
+  //     isDelivered: false,
+  //     isCancelled: false,
+  //     createdAt: DateTime.now(),
+  //   ),
+  //   OrderModel(
+  //     id: 2,
+  //     customerId: 23,
+  //     productIds: const [1, 2, 3],
+  //     deliveryFee: 10,
+  //     subtotal: 30,
+  //     total: 30,
+  //     isAccepted: false,
+  //     isDelivered: false,
+  //     isCancelled: false,
+  //     createdAt: DateTime.now(),
+  //   ),
+  // ];
 }

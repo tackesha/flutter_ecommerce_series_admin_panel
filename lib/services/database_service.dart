@@ -4,20 +4,20 @@ import 'package:flutter_ecommerce_backend/models/models.dart';
 class DatabaseService {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
-  Stream<List<Order>> getOrders() {
+  Stream<List<OrderModel>> getOrders() {
     return _firebaseFirestore.collection('orders').snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => Order.fromSnapshot(doc)).toList();
+      return snapshot.docs.map((doc) => OrderModel.fromSnapshot(doc)).toList();
     });
   }
 
-  Stream<List<Order>> getPendingOrders() {
+  Stream<List<OrderModel>> getPendingOrders() {
     return _firebaseFirestore
         .collection('orders')
         .where('isCancelled', isEqualTo: false)
         .where('isDelivered', isEqualTo: false)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) => Order.fromSnapshot(doc)).toList();
+      return snapshot.docs.map((doc) => OrderModel.fromSnapshot(doc)).toList();
     });
   }
 
@@ -42,8 +42,24 @@ class DatabaseService {
             .toList());
   }
 
-  Future<void> addProduct(Product product) {
-    return _firebaseFirestore.collection('products').add(product.toMap());
+  Stream<List<Category>> getCategories() {
+    return _firebaseFirestore.collection('categories').snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => Category.fromMap(doc.data())).toList());
+  }
+
+  Future<void> addProduct(Product product) async {
+      final docRef = _firebaseFirestore.collection('products').doc();
+      final productId = docRef.id;
+      final newProduct = product.copyWith(id: productId);
+      await docRef.set(newProduct.toMap());
+  // if(product.id == ''){
+  //   final docRef = _firebaseFirestore.collection('products').doc();
+  //   product.id = docRef.id;
+  //    await docRef.set(product.toMap());
+  // }else {
+  //   await _firebaseFirestore.collection('products').doc(product.id).set(product.toMap());
+  // } 
+  //   //return _firebaseFirestore.collection('products').add(product.toMap());
   }
 
   Future<void> updateField(
@@ -61,7 +77,7 @@ class DatabaseService {
   }
 
   Future<void> updateOrder(
-    Order order,
+    OrderModel order,
     String field,
     dynamic newValue,
   ) {

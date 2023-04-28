@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 class OrderController extends GetxController {
   final DatabaseService database = DatabaseService();
 
-  var orders = <Order>[].obs;
-  var pendingOrders = <Order>[].obs;
+  var orders = <OrderModel>[].obs;
+  var pendingOrders = <OrderModel>[].obs;
 
   @override
   void onInit() {
@@ -16,7 +16,7 @@ class OrderController extends GetxController {
   }
 
   void updateOrder(
-    Order order,
+    OrderModel order,
     String field,
     bool value,
   ) {

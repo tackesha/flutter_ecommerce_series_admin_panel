@@ -10,22 +10,25 @@ import '/controllers/controllers.dart';
 class NewProductScreen extends StatelessWidget {
   NewProductScreen({Key? key}) : super(key: key);
 
-  final ProductController productController = Get.find();
+  final ProductController productController = Get.find(tag: 'productController');
+  final CategoryController categoryController = Get.find(tag: 'categoryController');
 
   StorageService storage = StorageService();
   DatabaseService database = DatabaseService();
 
   @override
-  Widget build(BuildContext context) {
-    List<String> categories = [
-      'Smoothies',
-      'Soft Drinks',
-      'Water',
-    ];
+   Widget build(BuildContext context) {
+  //   List<String> categories = [
+  //     'Smoothies',
+  //     'Soft Drinks',
+  //     'Water',
+  //   ];
+
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add a Product'),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.redAccent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -34,50 +37,77 @@ class NewProductScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: 100,
-                child: Card(
-                  margin: EdgeInsets.zero,
-                  color: Colors.black,
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () async {
-                          ImagePicker _picker = ImagePicker();
-                          final XFile? _image = await _picker.pickImage(
-                              source: ImageSource.gallery);
-
-                          if (_image == null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('No image was selected.'),
-                              ),
-                            );
-                          }
-
-                          if (_image != null) {
-                            await storage.uploadImage(_image);
-                            var imageUrl =
-                                await storage.getDownloadURL(_image.name);
-
-                            productController.newProduct.update(
-                                'imageUrl', (_) => imageUrl,
-                                ifAbsent: () => imageUrl);
-                          }
-                        },
-                        icon: const Icon(
-                          Icons.add_circle,
-                          color: Colors.white,
+                height: 60,
+                child: InkWell(
+                  splashColor: Colors.red,
+                  highlightColor: Colors.red,
+                  onTap: () async {
+                            ImagePicker _picker = ImagePicker();
+                            final XFile? _image = await _picker.pickImage(
+                                source: ImageSource.gallery);
+                
+                            if (_image == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('No image was selected.'),
+                                ),
+                              );
+                            }
+                
+                            if (_image != null) {
+                              await storage.uploadImage(_image);
+                              var imageUrl =
+                                  await storage.getDownloadURL(_image.name);
+                
+                              productController.newProduct.update(
+                                  'imageUrl', (_) => imageUrl,
+                                  ifAbsent: () => imageUrl);
+                            }
+                          },
+                  child: Card(
+                    margin: EdgeInsets.zero,
+                    color: Colors.white10,
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: () async {
+                            // ImagePicker _picker = ImagePicker();
+                            // final XFile? _image = await _picker.pickImage(
+                            //     source: ImageSource.gallery);
+                
+                            // if (_image == null) {
+                            //   ScaffoldMessenger.of(context).showSnackBar(
+                            //     const SnackBar(
+                            //       content: Text('No image was selected.'),
+                            //     ),
+                            //   );
+                            // }
+                
+                            // if (_image != null) {
+                            //   await storage.uploadImage(_image);
+                            //   var imageUrl =
+                            //       await storage.getDownloadURL(_image.name);
+                
+                            //   productController.newProduct.update(
+                            //       'imageUrl', (_) => imageUrl,
+                            //       ifAbsent: () => imageUrl);
+                            // }
+                          },
+                          icon: const Icon(
+                            Icons.add_circle,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      const Text(
-                        'Add an Image',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                        const Text(
+                          'Add an Image',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -102,14 +132,12 @@ class NewProductScreen extends StatelessWidget {
               DropdownButtonFormField(
                 iconSize: 20,
                 decoration: const InputDecoration(hintText: 'Product Category'),
-                items: categories.map(
-                  (value) {
-                    return DropdownMenuItem(
-                      value: value,
-                      child: Text(value),
-                    );
-                  },
-                ).toList(),
+                items: categoryController.categories.map((category) {
+                  return DropdownMenuItem<String>(
+                    value: category.id,
+                    child: Text(category.name),
+                  );
+                }).toList(),
                 onChanged: (value) {
                   productController.newProduct.update(
                     'category',
@@ -167,7 +195,7 @@ class NewProductScreen extends StatelessWidget {
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.black,
+                    backgroundColor: Colors.black,
                   ),
                   child: const Text(
                     'Save',

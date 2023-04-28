@@ -1,69 +1,90 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '/models/models.dart';
 import '/screens/screens.dart';
 import '/controllers/controllers.dart';
 
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
 class ProductsScreen extends StatelessWidget {
   ProductsScreen({Key? key}) : super(key: key);
 
-  final ProductController productController = Get.put(ProductController());
+  final ProductController productController = Get.put(ProductController(), tag: 'productController');
+  final CategoryController categoryController = Get.put(CategoryController(), tag: 'categoryController');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Products'),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.redAccent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
             SizedBox(
-              height: 100,
-              child: Card(
-                margin: EdgeInsets.zero,
-                color: Colors.black,
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Get.to(() => NewProductScreen());
-                      },
-                      icon: const Icon(
-                        Icons.add_circle,
-                        color: Colors.white,
+              height: 60,
+              child: InkWell(
+                  splashColor: Colors.red,
+                  highlightColor: Colors.red,
+               onTap: () {
+                          Get.to(() => NewProductScreen());
+                        },
+                child: Card(
+                  margin: EdgeInsets.zero,
+                  color: Colors.white10,
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          //Get.to(() => NewProductScreen());
+                        },
+                        icon: const Icon(
+                          Icons.add_circle,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    const Text(
-                      'Add a New Product',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                      const Text(
+                        'Add a New Product',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-            Expanded(
+           Expanded(
               child: Obx(
-                () => ListView.builder(
-                  itemCount: productController.products.length,
-                  itemBuilder: (context, index) {
-                    return SizedBox(
-                      height: 210,
-                      child: ProductCard(
-                        product: productController.products[index],
-                        index: index,
-                      ),
+                () => GridView.count(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1,
+                  mainAxisSpacing: 10, // відстань між елементами по головному напрямку
+                  crossAxisSpacing: 10, 
+                  children: List.generate(productController.products.length, (index) {
+                    return ProductCard(
+                      product: productController.products[index],
+                      index: index,
                     );
-                  },
+                  }),
                 ),
+                // ListView.builder(
+                //   itemCount: productController.products.length,
+                //   itemBuilder: (context, index) {
+                //     return SizedBox(
+                //       height: 210,
+                //       child: ProductCard(
+                //         product: productController.products[index],
+                //         index: index,
+                //       ),
+                //     );
+                //   },
+                // ),
               ),
             )
           ],
@@ -83,7 +104,7 @@ class ProductCard extends StatelessWidget {
     required this.index,
   }) : super(key: key);
 
-  final ProductController productController = Get.find();
+  final ProductController productController = Get.find(tag: 'productController');
 
   @override
   Widget build(BuildContext context) {
@@ -94,10 +115,10 @@ class ProductCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            Text(              
               product.name,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -105,7 +126,7 @@ class ProductCard extends StatelessWidget {
             Text(
               product.description,
               style: const TextStyle(
-                fontSize: 12,
+                fontSize: 20,
               ),
             ),
             const SizedBox(height: 10),
@@ -125,8 +146,8 @@ class ProductCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const SizedBox(
-                            width: 50,
+                          const Expanded(
+                            flex: 1,
                             child: Text(
                               'Price',
                               style: TextStyle(
@@ -135,8 +156,8 @@ class ProductCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SizedBox(
-                            width: 175,
+                          Expanded(
+                            flex: 6,
                             child: Slider(
                               value: product.price,
                               min: 0,
@@ -168,8 +189,8 @@ class ProductCard extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          const SizedBox(
-                            width: 50,
+                          const Expanded(
+                            flex: 1,
                             child: Text(
                               'Qty.',
                               style: TextStyle(
@@ -178,8 +199,8 @@ class ProductCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SizedBox(
-                            width: 175,
+                          Expanded(
+                            flex: 6,
                             child: Slider(
                               value: product.quantity.toDouble(),
                               min: 0,
@@ -214,7 +235,8 @@ class ProductCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                )
+                ),
+
               ],
             ),
           ],

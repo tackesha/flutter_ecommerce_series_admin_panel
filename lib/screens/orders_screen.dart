@@ -40,7 +40,7 @@ class OrderCard extends StatelessWidget {
     required this.order,
   }) : super(key: key);
 
-  final Order order;
+  final OrderModel order;
   final OrderController orderController = Get.find();
 
   @override
@@ -182,7 +182,7 @@ class OrderCard extends StatelessWidget {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.black,
+                            backgroundColor: Colors.black,
                             minimumSize: const Size(150, 40),
                           ),
                           child: const Text(
@@ -201,7 +201,7 @@ class OrderCard extends StatelessWidget {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.black,
+                            backgroundColor: Colors.black,
                             minimumSize: const Size(150, 40),
                           ),
                           child: const Text(
@@ -220,7 +220,7 @@ class OrderCard extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.black,
+                      backgroundColor: Colors.black,
                       minimumSize: const Size(150, 40),
                     ),
                     child: const Text(

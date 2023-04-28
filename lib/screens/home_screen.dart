@@ -17,9 +17,10 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My eCommerce'),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.redAccent,
       ),
       body: SizedBox(
+        width: 350,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -54,7 +55,12 @@ class HomeScreen extends StatelessWidget {
                 },
                 child: const Card(
                   child: Center(
-                    child: Text('Go To Products'),
+                    child: Text('Go To Products',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    ),
                   ),
                 ),
               ),
@@ -69,7 +75,11 @@ class HomeScreen extends StatelessWidget {
                 },
                 child: const Card(
                   child: Center(
-                    child: Text('Go To Orders'),
+                    child: Text('Go To Orders',style: 
+                    TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),),
                   ),
                 ),
               ),
